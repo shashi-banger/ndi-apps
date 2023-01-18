@@ -1,5 +1,7 @@
 #include <cstdio>
 #include <chrono>
+#include <string>
+#include <regex>
 #include <Processing.NDI.Lib.h>
 
 #ifdef _WIN32
@@ -24,11 +26,33 @@ int main(int argc, char* argv[])
 	// Wait until there is one source
 	uint32_t no_sources = 0;
 	const NDIlib_source_t* p_sources = NULL;
-	while (!no_sources) {
-		// Wait until the sources on the network have changed
-		printf("Looking for sources ...\n");
-		NDIlib_find_wait_for_sources(pNDI_find, 1000/* One second */);
-		p_sources = NDIlib_find_get_current_sources(pNDI_find, &no_sources);
+	std::string source_name = argv[1] ? argv[1] : "My Video";
+	std::regex str_expr("[A-Za-z0-9\\-_\\.]* \\(([A-Za-z0-9\\-_]*)\\)");
+
+	// Wait until the sources on the network have changed
+	printf("Looking for sources ...\n");
+	NDIlib_find_wait_for_sources(pNDI_find, 1000/* One second */);
+	p_sources = NDIlib_find_get_current_sources(pNDI_find, &no_sources);
+
+	const NDIlib_source_t* req_source =NULL;
+
+	for(int i = 0; i < no_sources; i++) {
+		std::smatch sm;
+		printf("p_sources->p_ndi_name=%s %d\n", p_sources[i].p_ndi_name, no_sources);
+		std::regex_match(std::string(p_sources[i].p_ndi_name), sm, str_expr);
+		if(sm.size() == 0) {
+			printf("No sources found\n");
+			return 0;
+		}
+		printf("Found source %s\n", sm[1].str().c_str());
+		if(sm[1].str() == source_name) {
+			req_source = p_sources + i;
+		}
+	}
+
+	if(req_source == NULL) {
+		printf("Source \"%s\" not found\n", source_name.c_str());
+		return 0;
 	}
 
    printf("no sources=%u\n", no_sources);
@@ -39,7 +63,7 @@ int main(int argc, char* argv[])
 		return 0;
 
 	// Connect to our sources
-	NDIlib_recv_connect(pNDI_recv, p_sources + 0);
+	NDIlib_recv_connect(pNDI_recv, req_source);
 
 	// Destroy the NDI finder. We needed to have access to the pointers to p_sources[0]
 	NDIlib_find_destroy(pNDI_find);

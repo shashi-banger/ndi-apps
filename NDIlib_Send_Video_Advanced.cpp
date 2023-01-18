@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
 
 	// Create an NDI source that is called "My Video" and is clocked to the video.
 	NDIlib_send_create_t NDI_send_create_desc;
-	NDI_send_create_desc.p_ndi_name = "My Video-1";
+	NDI_send_create_desc.p_ndi_name = argv[1] ? argv[1] : "My Video";
 
 	// We create the NDI sender
 	NDIlib_send_instance_t pNDI_send = NDIlib_send_create(&NDI_send_create_desc);
