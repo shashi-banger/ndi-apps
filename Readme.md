@@ -17,5 +17,20 @@ export LD_LIBRARY_PATH=/Library/NDI\ SDK\ for\ Apple/lib/macOS
 # Terminal-2
 export LD_LIBRARY_PATH=/Library/NDI\ SDK\ for\ Apple/lib/macOS
 ./ndi-recv
+```
+
+## Usage
 
 ```
+./ndi-send-adv sb-1
+```
+
+```
+./ndi-send-adv sb-2
+```
+
+```
+/ndi-recv sb-1
+```
+
+
