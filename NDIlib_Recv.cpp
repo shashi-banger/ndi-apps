@@ -38,8 +38,9 @@ int main(int argc, char* argv[])
 
 	for(int i = 0; i < no_sources; i++) {
 		std::smatch sm;
-		printf("p_sources->p_ndi_name=%s %d\n", p_sources[i].p_ndi_name, no_sources);
-		std::regex_match(std::string(p_sources[i].p_ndi_name), sm, str_expr);
+		std::string ndi_name = std::string(p_sources[i].p_ndi_name);
+		printf("p_sources->p_ndi_name=%s %d\n", ndi_name, no_sources);
+		std::regex_match(ndi_name, sm, str_expr);
 		if(sm.size() == 0) {
 			printf("No sources found\n");
 			return 0;
