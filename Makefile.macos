@@ -1,0 +1,23 @@
+
+NDI_SDK_PATH := /Library/NDI\ SDK\ for\ Apple
+
+.PHONY: all 
+all: ndi-recv ndi-send-adv bin
+
+.PHONY: clean
+clean:
+	rm ./bin/*
+
+.PHONY: ndi-recv
+ndi-recv: bin
+	echo ">> Building ndi-recv"
+	gcc NDIlib_Recv.cpp -o ./bin/ndi-recv -I$(NDI_SDK_PATH)/include -lstdc++ -lndi -L$(NDI_SDK_PATH)/lib/macOS/
+
+.PHONY: bin
+bin:
+	mkdir $@
+
+.PHONY: ndi-send-adv
+ndi-send-adv: bin
+	echo ">> Building ndi-send-adv"
+	gcc NDIlib_Send_Video_Advanced.cpp -o ./bin/ndi-send-adv -I$(NDI_SDK_PATH)/include -lstdc++ -lndi -L$(NDI_SDK_PATH)/lib/macOS/
