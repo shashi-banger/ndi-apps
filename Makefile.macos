@@ -6,14 +6,13 @@ all: ndi-recv ndi-send-adv bin
 
 .PHONY: clean
 clean:
-	rm ./bin/*
+	rm -rf ./bin/
 
 .PHONY: ndi-recv
 ndi-recv: bin
 	echo ">> Building ndi-recv"
 	gcc NDIlib_Recv.cpp -o ./bin/ndi-recv -I$(NDI_SDK_PATH)/include -lstdc++ -lndi -L$(NDI_SDK_PATH)/lib/macOS/
 
-.PHONY: bin
 bin:
 	mkdir $@
 
